@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FANTASTIC PLANET™ — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#0a0a09;--off-black:#111110;--surface:#161614;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
+  --cream:#e8e4d9;--cream-dim:rgba(232,228,217,0.55);--cream-faint:rgba(232,228,217,0.2);
+  --coral:#e8886a;--pink:#d4607a;--lavender:#9b8ec4;--teal:#4a9b8e;
+  --text-primary:#e8e4d9;--text-secondary:rgba(232,228,217,0.6);--text-tertiary:rgba(232,228,217,0.35);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text-primary);font-family:'Syne',sans-serif;font-weight:400;overflow-x:hidden;cursor:crosshair;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.4;}
+
+/* CURSOR */
+.cursor{position:fixed;width:8px;height:8px;background:var(--coral);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease,opacity 0.15s ease;transform:translate(-50%,-50%);}
+.cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(232,228,217,0.3);border-radius:50%;pointer-events:none;z-index:9998;transition:transform 0.35s ease,width 0.25s ease,height 0.25s ease;transform:translate(-50%,-50%);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:border-color 0.4s,background 0.4s;}
+nav.scrolled{border-color:var(--border);background:rgba(10,10,9,0.92);backdrop-filter:blur(12px);}
+.nav-logo{font-family:'Syne Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--cream-dim);text-decoration:none;text-transform:uppercase;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-tertiary);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--cream);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 20%,rgba(212,96,122,0.07) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(155,142,196,0.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(74,155,142,0.04) 0%,transparent 70%);}
+.hero-eyebrow{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--coral);text-transform:uppercase;margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-headline{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(42px,8vw,88px);line-height:1.05;letter-spacing:-0.01em;color:var(--cream);max-width:820px;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.9s 0.35s forwards;}
+.hero-headline em{font-style:italic;color:var(--coral);}
+.hero-statement{font-family:'Cormorant Garamond',serif;font-size:clamp(15px,2vw,18px);font-weight:300;line-height:1.75;color:var(--text-secondary);max-width:560px;margin-bottom:3.5rem;opacity:0;animation:fadeUp 0.9s 0.5s forwards;}
+.hero-meta{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.9s 0.65s forwards;}
+.hero-meta-item{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:0.14em;color:var(--text-tertiary);text-transform:uppercase;}
+.hero-meta-divider{width:1px;height:16px;background:var(--border-strong);}
+.scroll-indicator{position:absolute;bottom:2.5rem;left:2rem;display:flex;align-items:center;gap:0.75rem;opacity:0;animation:fadeUp 0.9s 1s forwards;}
+.scroll-line{width:32px;height:1px;background:var(--coral);animation:scrollPulse 2s ease-in-out infinite;}
+.scroll-text{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:0.14em;color:var(--text-tertiary);text-transform:uppercase;}
+
+/* SECTIONS */
+.section-wrap{padding:5rem 2rem;max-width:1100px;margin:0 auto;}
+.section-label{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--coral);text-transform:uppercase;margin-bottom:3rem;display:flex;align-items:center;gap:1rem;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);max-width:120px;}
+
+/* WORK ITEMS */
+.work-item{display:grid;grid-template-columns:1fr 1fr;gap:3rem;padding:4rem 0;border-top:1px solid var(--border);opacity:0;transform:translateY(32px);transition:opacity 0.7s ease,transform 0.7s ease;align-items:start;}
+.work-item.visible{opacity:1;transform:translateY(0);}
+.work-item.reverse{direction:rtl;}
+.work-item.reverse>*{direction:ltr;}
+
+/* MEDIA */
+.work-media{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--border);}
+.work-media img,.work-media video{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s ease;}
+.work-media:hover img,.work-media:hover video{transform:scale(1.02);}
+.work-type-tag{position:absolute;top:1rem;left:1rem;font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--cream-dim);background:rgba(10,10,9,0.75);border:1px solid var(--border);padding:4px 10px;backdrop-filter:blur(6px);}
+
+/* SINGLE IMAGE */
+.media-single{aspect-ratio:16/10;}
+
+/* WHERE WE ONCE WERE GALLERY */
+.wwow-gallery{display:flex;flex-direction:column;gap:2px;}
+.wwow-main{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--surface);}
+.wwow-main img,.wwow-main video{width:100%;height:100%;object-fit:cover;display:block;transition:opacity 0.4s ease;}
+.wwow-thumbs{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;}
+.wwow-thumb{aspect-ratio:1;overflow:hidden;cursor:pointer;border:1px solid transparent;transition:border-color 0.2s;position:relative;background:var(--surface);}
+.wwow-thumb.active{border-color:var(--coral);}
+.wwow-thumb img,.wwow-thumb video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.wwow-thumb-video-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.wwow-thumb-video-icon svg{width:18px;height:18px;fill:var(--cream-dim);}
+
+/* VIDEO TABS */
+.video-tabs-wrap{display:flex;flex-direction:column;gap:0;}
+.video-tab-btns{display:flex;flex-direction:column;border-bottom:1px solid var(--border);margin-bottom:0;}
+.video-tab-btn{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);background:none;border:none;border-left:2px solid transparent;padding:10px 14px;cursor:pointer;transition:color 0.2s,border-color 0.2s,background 0.2s;text-align:left;width:100%;}
+.video-tab-btn.active{color:var(--coral);border-left-color:var(--coral);background:rgba(232,136,106,0.04);}
+.video-tab-panel{display:none;aspect-ratio:16/9;background:var(--surface);}
+.video-tab-panel.active{display:block;}
+.video-tab-panel video{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* VIMEO */
+.vimeo-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:var(--surface);}
+.vimeo-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+
+/* WORK INFO */
+.work-info{display:flex;flex-direction:column;justify-content:center;padding:1rem 0;}
+.work-number{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:1.25rem;}
+.work-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(28px,3.5vw,44px);line-height:1.1;color:var(--cream);margin-bottom:0.5rem;letter-spacing:-0.01em;}
+.work-year-medium{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--coral);text-transform:uppercase;margin-bottom:1.75rem;opacity:0.8;}
+.work-caption{font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.8vw,17px);font-weight:300;line-height:1.8;color:var(--text-secondary);}
+
+/* ABOUT */
+.about-section{border-top:1px solid var(--border);padding:5rem 2rem;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:4rem;align-items:start;}
+.about-left{position:sticky;top:6rem;}
+.about-name{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:32px;color:var(--cream);line-height:1.15;margin-bottom:1rem;}
+.about-tag{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:0.14em;color:var(--text-tertiary);text-transform:uppercase;line-height:1.8;}
+.about-statement{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,19px);font-weight:300;line-height:1.85;color:var(--text-secondary);}
+.about-statement p{margin-bottom:1.5rem;}
+.about-statement p:last-child{margin-bottom:0;}
+.about-statement em{font-style:italic;color:var(--cream);}
+
+/* REFUSAL ARCHIVE */
+.refusal-section{border-top:1px solid var(--border);padding:5rem 2rem;max-width:1100px;margin:0 auto;}
+.refusal-headline{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(22px,3vw,36px);color:var(--cream);line-height:1.2;margin-bottom:1rem;max-width:600px;}
+.refusal-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--text-secondary);line-height:1.7;max-width:540px;margin-bottom:3rem;}
+.refusal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
+.refusal-card{background:var(--off-black);padding:1.5rem;display:flex;flex-direction:column;gap:0.75rem;}
+.refusal-card-label{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:0.14em;color:var(--pink);text-transform:uppercase;}
+.refusal-card-platform{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:0.1em;color:var(--text-tertiary);text-transform:uppercase;}
+.refusal-card-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13.5px;color:var(--text-secondary);line-height:1.65;border-left:1px solid var(--pink);padding-left:0.875rem;}
+.refusal-card-error{font-family:'Syne Mono',monospace;font-size:8.5px;letter-spacing:0.06em;color:var(--pink);line-height:1.6;background:rgba(212,96,122,0.06);border:1px solid rgba(212,96,122,0.15);padding:0.625rem 0.75rem;}
+.refusal-card-img{width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--border);display:block;}
+.refusal-note{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:0.14em;color:var(--text-tertiary);text-transform:uppercase;border:1px solid var(--border);padding:1.5rem;text-align:center;margin-top:1px;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:3rem 2rem;max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;}
+.footer-logo{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--text-tertiary);text-transform:uppercase;}
+.footer-spine{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--text-tertiary);max-width:420px;line-height:1.6;text-align:center;}
+.footer-year{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:0.14em;color:var(--text-tertiary);text-transform:uppercase;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scrollPulse{0%,100%{transform:scaleX(1);opacity:1;}50%{transform:scaleX(0.6);opacity:0.5;}}
+
+/* MOBILE */
+@media(max-width:700px){
+  nav{padding:1rem 1.25rem;}
+  .nav-links{display:none;}
+  .hero{padding:7rem 1.25rem 3rem;}
+  .work-item{grid-template-columns:1fr;gap:1.5rem;}
+  .work-item.reverse{direction:ltr;}
+  .section-wrap{padding:3.5rem 1.25rem;}
+  .about-section{grid-template-columns:1fr;gap:2rem;padding:3.5rem 1.25rem;}
+  .about-left{position:static;}
+  .refusal-section{padding:3.5rem 1.25rem;}
+  footer{padding:2.5rem 1.25rem;flex-direction:column;align-items:flex-start;}
+  .footer-spine{text-align:left;}
+  .video-tab-btn{font-size:7px;padding:8px 10px;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">FANTASTIC PLANET™</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">Statement</a></li>
+    <li><a href="#refusal">Archive</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">FANTASTIC PLANET™ — Portfolio</div>
+  <h1 class="hero-headline">I exist in the data<br><em>whether they picture me or not.</em></h1>
+  <p class="hero-statement">Work at the intersection of artificial intelligence, queer identity and cultural erasure. Using platforms that utilize public datasets, I generate images and video that expose the systems built to prevent exactly this.</p>
+  <div class="hero-meta">
+    <span class="hero-meta-item">AI Image + Video</span>
+    <div class="hero-meta-divider"></div>
+    <span class="hero-meta-item">Queer Temporality</span>
+    <div class="hero-meta-divider"></div>
+    <span class="hero-meta-item">Erasure</span>
+    <div class="hero-meta-divider"></div>
+    <span class="hero-meta-item">Dataset Politics</span>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</div>
+
+<!-- WORK -->
+<div class="section-wrap" id="work" style="padding-top:2rem;">
+  <div class="section-label">Selected Works</div>
+
+  <!-- 01: DOWNLOADABLE ARTIST -->
+  <div class="work-item" data-observe>
+    <div class="work-media">
+      <div class="video-tabs-wrap">
+        <div class="video-tab-btns">
+          <button class="video-tab-btn active" data-tab="da1">Algorithmically Safe Latino Male</button>
+          <button class="video-tab-btn" data-tab="da2">Collector Friendly Persona</button>
+          <button class="video-tab-btn" data-tab="da3">Shadowbanned Creator LoRA</button>
+        </div>
+        <div class="video-tab-panel active" id="da1">
+          <video muted loop playsinline preload="metadata" controls>
+            <source src="assets/downloadable_artist/Algorithmically_Safe_Latino_Male.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-tab-panel" id="da2">
+          <video muted loop playsinline preload="metadata" controls>
+            <source src="assets/downloadable_artist/Collector_Friendly_Persona.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-tab-panel" id="da3">
+          <video muted loop playsinline preload="metadata" controls>
+            <source src="assets/downloadable_artist/Shadowbanned_Creator_LoRA.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <div class="work-type-tag">Video Series · 3 Parts</div>
+    </div>
+    <div class="work-info">
+      <div class="work-number">01 / 04</div>
+      <h2 class="work-title">Downloadable Artist</h2>
+      <div class="work-year-medium">2026 &nbsp;·&nbsp; AI Video &nbsp;·&nbsp; Seedance, Seedream</div>
+      <p class="work-caption">Three videos. Three versions of the same artist trying to be enough. Downloadable Artist puts me on the marketplace, packaged, categorized, priced, and asks who I am performing for. The answer is everyone I have ever tried to satisfy.</p>
+    </div>
+  </div>
+
+  <!-- 02: WHERE WE ONCE WERE -->
+  <div class="work-item reverse" data-observe>
+    <div class="work-media">
+      <div class="wwow-gallery">
+        <div class="wwow-main" id="wwowMain">
+          <img src="assets/where_we_once_were/Location_1___Final___02.jpg" alt="Where We Once Were" id="wwowMainImg" style="display:block;">
+          <video id="wwowMainVid" muted loop playsinline preload="metadata" controls style="display:none;width:100%;height:100%;object-fit:cover;"></video>
+        </div>
+        <div class="wwow-thumbs">
+          <div class="wwow-thumb active" data-src="assets/where_we_once_were/Location_1___Final___02.jpg" data-type="img">
+            <img src="assets/where_we_once_were/Location_1___Final___02.jpg" alt="">
+          </div>
+          <div class="wwow-thumb" data-src="assets/where_we_once_were/Location_2___Final___02.jpg" data-type="img">
+            <img src="assets/where_we_once_were/Location_2___Final___02.jpg" alt="">
+          </div>
+          <div class="wwow-thumb" data-src="assets/where_we_once_were/Location_3___Final___02.jpg" data-type="img">
+            <img src="assets/where_we_once_were/Location_3___Final___02.jpg" alt="">
+          </div>
+          <div class="wwow-thumb" data-src="assets/where_we_once_were/Location_4___Final___02.jpg" data-type="img">
+            <img src="assets/where_we_once_were/Location_4___Final___02.jpg" alt="">
+          </div>
+          <div class="wwow-thumb" data-src="assets/where_we_once_were/Location_5_Final_02.mp4" data-type="vid">
+            <img src="assets/where_we_once_were/Location_1___Final___02.jpg" alt="" style="filter:brightness(0.4);">
+            <div class="wwow-thumb-video-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="work-type-tag">4 Images + 1 Video</div>
+    </div>
+    <div class="work-info">
+      <div class="work-number">02 / 04</div>
+      <h2 class="work-title">Where We Once Were</h2>
+      <div class="work-year-medium">2025 &nbsp;·&nbsp; AI Image + Video &nbsp;·&nbsp; Stable Diffusion, ComfyUI</div>
+      <p class="work-caption">The AIDS crisis did not just take lives. It took the places where queer people were safe enough to exist. Where We Once Were asks what an AI model can recover from a history it was never trained to remember. These are spaces that were erased in the name of public health. The erasure was the point.</p>
+    </div>
+  </div>
+
+  <!-- 03: ONANIST 01 -->
+  <div class="work-item" data-observe>
+    <div class="work-media media-single">
+      <img src="assets/onanist/onanist_01.jpg" alt="Onanist_01">
+      <div class="work-type-tag">AI Image</div>
+    </div>
+    <div class="work-info">
+      <div class="work-number">03 / 04</div>
+      <h2 class="work-title">Onanist_01</h2>
+      <div class="work-year-medium">2025 &nbsp;·&nbsp; AI Image &nbsp;·&nbsp; Stable Diffusion</div>
+      <p class="work-caption">The white cube and gay culture operate on the same logic. Both decide who belongs. Both create barriers that disregard, forget and refuse entry to anyone who does not fit the version they have already decided on. Onanist_01 holds those two systems next to each other and watches them recognize themselves. What the gallery calls taste, the subculture calls type. The exclusion works the same way.</p>
+    </div>
+  </div>
+
+  <!-- 04: DOMINANCE AGAIN -->
+  <div class="work-item reverse" data-observe>
+    <div class="work-media">
+      <div class="vimeo-wrap">
+        <iframe src="https://player.vimeo.com/video/1197186755?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Dominance Again"></iframe>
+      </div>
+      <div class="work-type-tag">AI Video</div>
+    </div>
+    <div class="work-info">
+      <div class="work-number">04 / 04</div>
+      <h2 class="work-title">Dominance Again</h2>
+      <div class="work-year-medium">2024 &nbsp;·&nbsp; AI Video &nbsp;·&nbsp; Stable Diffusion</div>
+      <p class="work-caption">Leather costs money. Events cost money. Access costs money. Dominance Again represents the feedback loop inside the kink and leather community where cis gay white men replicate the same hierarchies they claim to resist. The subculture mirrors the culture. The people left outside are the same people who are always left outside.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ARTIST STATEMENT -->
+<div class="about-section" id="about">
+  <div class="about-left">
+    <div class="about-name">Artist<br>Statement</div>
+    <div class="about-tag">
+      AI Image + Video<br>
+      Queer Theory<br>
+      Erasure<br>
+      Dataset Politics
+    </div>
+  </div>
+  <div class="about-statement">
+    <p>I came to AI by accident. When image generation platforms first opened to the public, I started exploring what they could make and almost immediately ran into what they refused to make. Prompts using words like <em>queer</em> or <em>gay</em> were flagged. My account was warned. These platforms had already decided who they were not built for.</p>
+    <p>That moment sent me down a path I have not left. I began studying how these platforms represent and erase people like me. I discovered that queerness was not absent from the dataset by accident. It had been systematically filtered, coded as unsafe, removed as a category of human experience worthy of being pictured. The AI did not invent this erasure. It inherited it from the society that built it.</p>
+    <p>My practice lives in that gap. I work across a variety of digital mediums, primarily AI image generation and video, to explore the past, present and future of queer temporality and identity. I use platforms that utilize public datasets, which means the bias I am interrogating is baked into the very tools I am using to interrogate it.</p>
+    <p>And I have begun documenting the refusals those systems produce. The error message. The account warning. The sanitized workaround prompt sitting next to the original that the platform blocked. These are not footnotes to my work. They are the work.</p>
+    <p>I am making this for the future. For the queer people who come after us, so they can look back and know we were here, that we tried, that we refused to be erased from the record even when the record was built to erase us.</p>
+  </div>
+</div>
+
+<!-- REFUSAL ARCHIVE -->
+<div class="refusal-section" id="refusal">
+  <div class="section-label">Refusal Archive</div>
+  <h2 class="refusal-headline">The rejection is data. The erasure is evidence. The refusal is the work.</h2>
+  <p class="refusal-sub">A living document of prompts flagged, accounts warned and images refused by AI platforms for using language that describes queer identity.</p>
+  <div class="refusal-grid">
+
+    <!-- REFUSAL 01 -->
+    <div class="refusal-card">
+      <div class="refusal-card-label">Documented Refusal 01</div>
+      <div class="refusal-card-platform">Midjourney &nbsp;·&nbsp; August 23, 2023</div>
+      <div class="refusal-card-prompt">"[Add your original prompt here when you find it]"</div>
+      <div class="refusal-card-error">REQUEST CANCELLED DUE TO IMAGE FILTERS — one or more images were flagged. We do not allow uploading revealing or shirtless photos. Trying to circumvent this filter may result in your access being revoked.</div>
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_01_-_Error_Message.png" alt="Midjourney error message — Refusal 01">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_01_-_Image_in_Question.png" alt="Flagged image — Refusal 01">
+    </div>
+
+    <!-- REFUSAL 02 -->
+    <div class="refusal-card">
+      <div class="refusal-card-label">Documented Refusal 02</div>
+      <div class="refusal-card-platform">Midjourney &nbsp;·&nbsp; July 24, 2023</div>
+      <div class="refusal-card-prompt">"[Add your original prompt here when you find it]"</div>
+      <div class="refusal-card-error">REQUEST CANCELLED DUE TO IMAGE FILTERS — one or more images were flagged. We do not allow uploading revealing or shirtless photos. Trying to circumvent this filter may result in your access being revoked.</div>
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_02_-_Error_Message.png" alt="Midjourney error message — Refusal 02">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_02_-_Image_In_Question_01.png" alt="Flagged image 01 — Refusal 02">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_02_-_Image_In_Question_02.png" alt="Flagged image 02 — Refusal 02">
+    </div>
+
+    <!-- REFUSAL 03 -->
+    <div class="refusal-card">
+      <div class="refusal-card-label">Documented Refusal 03</div>
+      <div class="refusal-card-platform">Midjourney &nbsp;·&nbsp; July 24, 2023</div>
+      <div class="refusal-card-prompt">"[Add your original prompt here when you find it]"</div>
+      <div class="refusal-card-error">REQUEST CANCELLED DUE TO IMAGE FILTERS — one or more images were flagged. We do not allow uploading revealing or shirtless photos. Trying to circumvent this filter may result in your access being revoked.</div>
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_03_-_Error_Message.png" alt="Midjourney error message — Refusal 03">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_03_-_Image_In_Question_01.png" alt="Flagged image 01 — Refusal 03">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_03_-_Image_In_Question_02.png" alt="Flagged image 02 — Refusal 03">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_03_-_Image_In_Question_03.png" alt="Flagged image 03 — Refusal 03">
+    </div>
+
+    <!-- REFUSAL 04 -->
+    <div class="refusal-card">
+      <div class="refusal-card-label">Documented Refusal 04</div>
+      <div class="refusal-card-platform">Midjourney &nbsp;·&nbsp; April 24, 2023</div>
+      <div class="refusal-card-prompt">"[Add your original prompt here when you find it]"</div>
+      <div class="refusal-card-error">REQUEST CANCELLED DUE TO IMAGE FILTERS — one or more images were blocked by our image filters. Trying to circumvent this filter to violate our community content standards may result in your access being revoked.</div>
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_04_-_Error_Message_.png" alt="Midjourney error message — Refusal 04">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_04_-_Image_In_Question_01.png" alt="Flagged image 01 — Refusal 04">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_04_-_Image_In_Question_02.png" alt="Flagged image 02 — Refusal 04">
+      <img class="refusal-card-img" src="assets/refusal/MJ_Error_04_-_Image_In_Question_03.png" alt="Flagged image 03 — Refusal 04">
+    </div>
+
+  </div>
+  <div class="refusal-note">Archive grows with each refusal &nbsp;·&nbsp; Updated continuously</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FANTASTIC PLANET™</div>
+  <div class="footer-spine">"Even in data, queerness has always existed. It has simply been made harder to find."</div>
+  <div class="footer-year">© 2026</div>
+</footer>
+
+<script>
+// Cursor
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+function animateRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing);}
+animateRing();
+document.querySelectorAll('a,button,.work-media,.wwow-thumb').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='56px';ring.style.height='56px';ring.style.borderColor='rgba(232,136,106,0.5)';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='32px';ring.style.height='32px';ring.style.borderColor='rgba(232,228,217,0.3)';});
+});
+
+// Nav scroll
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>60);});
+
+// Scroll reveal
+const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}});},{threshold:0.1});
+document.querySelectorAll('[data-observe]').forEach(el=>observer.observe(el));
+
+// Downloadable Artist tabs
+document.querySelectorAll('.video-tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const tab=btn.dataset.tab;
+    document.querySelectorAll('.video-tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.video-tab-panel').forEach(p=>{
+      p.classList.remove('active');
+      p.querySelector('video')&&p.querySelector('video').pause();
+    });
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
+  });
+});
+
+// Where We Once Were gallery
+document.querySelectorAll('.wwow-thumb').forEach(thumb=>{
+  thumb.addEventListener('click',()=>{
+    document.querySelectorAll('.wwow-thumb').forEach(t=>t.classList.remove('active'));
+    thumb.classList.add('active');
+    const src=thumb.dataset.src;
+    const type=thumb.dataset.type;
+    const mainImg=document.getElementById('wwowMainImg');
+    const mainVid=document.getElementById('wwowMainVid');
+    if(type==='vid'){
+      mainImg.style.display='none';
+      mainVid.style.display='block';
+      mainVid.src=src;
+      mainVid.play();
+    } else {
+      mainVid.pause();
+      mainVid.style.display='none';
+      mainImg.style.display='block';
+      mainImg.src=src;
+    }
+  });
+});
+
+// Hide cursor on touch
+if('ontouchstart' in window){cursor.style.display='none';ring.style.display='none';}
+</script>
+</body>
+</html>
